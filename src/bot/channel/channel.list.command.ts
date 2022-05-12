@@ -26,7 +26,7 @@ export class ChannelListSubCommand
     { interaction }: TransformedCommandExecutionContext<any>,
   ) {
     const itemsPerPage = 10;
-    const page = dto.page || 1;
+    const page = dto?.page || 1;
 
     const followedChannels = await this.prismaService.followChannel.findMany({
       where: {
