@@ -2,7 +2,7 @@
   <a href="https://github.com/Arkmind/discord.limit-gif/" target="blank"><img src="https://github.com/Arkmind/discord.limit-gif/blob/master/assets/logo.png?raw=true" width="320" alt="Gif Limiter Logo" /></a>
 </p>
 
-  <p align="center">A progressive <a href="http://discord.gg" target="_blank">Discord</a> bot make to limit the usage of gifs on servers.</p>
+  <p align="center">A progressive <a href="http://discord.gg" target="_blank">Discord</a> bot made to limit the usage of gifs on servers.</p>
 
 ## Installation
 ```bash
