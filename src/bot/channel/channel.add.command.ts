@@ -105,6 +105,11 @@ export class ChannelAddSubCommand
 
     this.eventEmitter.emit('bot.channel.add', followChannel);
 
-    return this.i18n.t('en-GB', 'bot.channel.add.SUCCESS', channel.toString());
+    return this.i18n.t(
+      'en-GB',
+      'bot.channel.add.SUCCESS',
+      channel.toString(),
+      dto.duration !== undefined ? `(duration set to ${dto.duration})` : ' ',
+    );
   }
 }

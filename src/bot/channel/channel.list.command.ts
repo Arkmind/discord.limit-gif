@@ -1,33 +1,33 @@
+import { TransformPipe } from '@discord-nestjs/common';
 import {
-  CommandExecutionContext,
-  DiscordCommand,
+  DiscordTransformedCommand,
+  Payload,
   SubCommand,
+  TransformedCommandExecutionContext,
 } from '@discord-nestjs/core';
-import { Injectable } from '@nestjs/common';
-import {
-  CommandInteraction,
-  CacheType,
-  ContextMenuInteraction,
-  MessagePayload,
-  InteractionReplyOptions,
-  MessageEmbed,
-} from 'discord.js';
-import { ApplicationCommandTypes } from 'discord.js/typings/enums';
+import { Injectable, UsePipes } from '@nestjs/common';
+import { MessageEmbed } from 'discord.js';
 import { PrismaService } from 'src/prisma.service';
+import { ListDto } from './dtos/channels.list.dto';
 
 @SubCommand({
   name: 'list',
   description: 'List all channels in the gif limiter',
 })
 @Injectable()
-export class ChannelListSubCommand implements DiscordCommand {
+@UsePipes(TransformPipe)
+export class ChannelListSubCommand
+  implements DiscordTransformedCommand<ListDto>
+{
   constructor(private readonly prismaService: PrismaService) {}
 
   async handler(
-    interaction:
-      | CommandInteraction<CacheType>
-      | ContextMenuInteraction<CacheType>,
+    @Payload() dto: ListDto,
+    { interaction }: TransformedCommandExecutionContext<any>,
   ) {
+    const itemsPerPage = 10;
+    const page = dto.page || 1;
+
     const followedChannels = await this.prismaService.followChannel.findMany({
       where: {
         channel: {
@@ -40,6 +40,8 @@ export class ChannelListSubCommand implements DiscordCommand {
           include: { guild: true },
         },
       },
+      take: itemsPerPage,
+      skip: itemsPerPage * page - 1,
     });
 
     const fields = followedChannels.map(({ channel, user, duration }) => ({

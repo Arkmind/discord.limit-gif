@@ -6,7 +6,7 @@ export default {
       MISSING_INPUT:
         'An input in missing. Wait, this should not be happening 🤨',
       add: {
-        SUCCESS: 'Channel %name% is now watched 🧐',
+        SUCCESS: 'Channel %name% is now watched 🧐 %duration%',
       },
       remove: {
         SUCCESS: 'Successfully removed %name% from watched channels 👋',
