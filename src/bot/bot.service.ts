@@ -74,7 +74,7 @@ export class BotService {
     );
 
     return !!preview.find((meta) =>
-      /(http(s?):)|([/|.|\w|\s])*\.(?:webp|gif)/.test(
+      /(http(s?):)([/|.|\w|\s|-])*\.(?:webp|gif)/.test(
         meta.getAttribute('content'),
       ),
     );
@@ -87,7 +87,7 @@ export class BotService {
           (attachment) =>
             ['image/gif', 'image/webp'].indexOf(attachment.contentType) !== -1,
         )) ||
-      /(http(s?):)|([/|.|\w|\s])*\.(?:webp|gif)/.test(message.content)
+      /(http(s?):)([/|.|\w|\s|-])*\.(?:webp|gif)/.test(message.content)
     ) {
       return true;
     }
