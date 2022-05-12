@@ -24,6 +24,10 @@ export default {
           "Sorry but that was a bit too much for me, seems like i'm not able to do it 😰",
         SUCCESS: 'Successfully added all channels to the watch list 😎',
       },
+      list: {
+        NO_MORE_PAGES:
+          "You've reached the end of the world, seems like there's no more pages to show ⛵☠",
+      },
     },
   },
 };

@@ -4,9 +4,11 @@ import {
   Payload,
   SubCommand,
   TransformedCommandExecutionContext,
+  UsePipes,
 } from '@discord-nestjs/core';
-import { Injectable, UsePipes } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { MessageEmbed } from 'discord.js';
+import { I18nService } from 'src/i18n/i18n.service';
 import { PrismaService } from 'src/prisma.service';
 import { ListDto } from './dtos/channels.list.dto';
 
@@ -19,7 +21,10 @@ import { ListDto } from './dtos/channels.list.dto';
 export class ChannelListSubCommand
   implements DiscordTransformedCommand<ListDto>
 {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly i18n: I18nService,
+  ) {}
 
   async handler(
     @Payload() dto: ListDto,
@@ -27,6 +32,8 @@ export class ChannelListSubCommand
   ) {
     const itemsPerPage = 10;
     const page = dto?.page || 1;
+
+    const count = await this.prismaService.followChannel.count();
 
     const followedChannels = await this.prismaService.followChannel.findMany({
       where: {
@@ -52,8 +59,13 @@ export class ChannelListSubCommand
       inline: false,
     }));
 
+    if (page > Math.floor(count / itemsPerPage)) {
+      return this.i18n.t('en-GB', 'bot.channel.list.NO_MORE_PAGES');
+    }
+
     const embed = new MessageEmbed()
       .setTitle('Channel list')
+      .setDescription(`Page : ${page}/${Math.floor(count / itemsPerPage)}`)
       .setColor('PURPLE')
       .addFields(...fields);
 
