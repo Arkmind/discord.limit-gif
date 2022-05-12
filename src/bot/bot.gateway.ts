@@ -67,8 +67,10 @@ export class BotGateway {
     const isAGif = await this.botService.isMessageAGif(message);
 
     if (!isAGif) return;
-    if (await this.isAuthorized(message))
-      return await this.prismaService.messageGif.create({
+    if (await this.isAuthorized(message)) {
+      const roles = message.member.roles.cache.toJSON();
+
+      const messageGif = await this.prismaService.messageGif.create({
         data: {
           id: message.id,
           message: message.content,
@@ -89,6 +91,50 @@ export class BotGateway {
           },
         },
       });
+
+      for (const role of roles) {
+        await this.prismaService.role.upsert({
+          where: { id: role.id },
+          create: {
+            id: role.id,
+            name: role.name,
+            createdAt: role.createdAt,
+            color: role.color,
+            guildId: message.guildId,
+            roleOverUsers: {
+              connectOrCreate: {
+                where: {
+                  roleUserId: {
+                    roleId: role.id,
+                    userId: message.author.id,
+                  },
+                },
+                create: {
+                  userId: message.author.id,
+                },
+              },
+            },
+          },
+          update: {
+            roleOverUsers: {
+              connectOrCreate: {
+                where: {
+                  roleUserId: {
+                    roleId: role.id,
+                    userId: message.author.id,
+                  },
+                },
+                create: {
+                  userId: message.author.id,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      return messageGif;
+    }
 
     try {
       await message.delete();
@@ -122,9 +168,13 @@ export class BotGateway {
       },
     });
 
+    console.log(lastSent);
+
     if (!lastSent) return true;
 
     const duration = await this.botService.getDuration(message);
+
+    console.log(duration);
 
     return (
       lastSent.createdAt.getTime() + duration * 1000 < new Date().getTime()

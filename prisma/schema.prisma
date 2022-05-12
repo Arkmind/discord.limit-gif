@@ -14,7 +14,8 @@ model Guild {
   id       String    @unique
   name     String
   duration Int
-  Channel  Channel[]
+  channels Channel[]
+  roles    Role[]
 }
 
 model Channel {
@@ -30,13 +31,13 @@ model Channel {
 }
 
 model FollowChannel {
-  id         String       @unique @default(cuid())
-  channel    Channel      @relation(fields: [channelId], references: [id])
-  channelId  String       @unique
-  user       User         @relation(fields: [userId], references: [id])
-  userId     String
-  duration   Int?
-  MessageGif MessageGif[]
+  id          String       @unique @default(cuid())
+  channel     Channel      @relation(fields: [channelId], references: [id])
+  channelId   String       @unique
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String
+  duration    Int?
+  messageGifs MessageGif[]
 }
 
 model User {
@@ -47,7 +48,31 @@ model User {
   mentionable   String?
 
   followChannels FollowChannel[]
-  MessageGif     MessageGif[]
+  messageGifs    MessageGif[]
+  roleOverUsers  RoleOverUser[]
+}
+
+model RoleOverUser {
+  id String @unique @default(cuid())
+
+  role   Role   @relation(fields: [roleId], references: [id])
+  roleId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@unique([roleId, userId], name: "roleUserId")
+}
+
+model Role {
+  id        String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  color     Int
+  duration  Int?
+
+  guild         Guild          @relation(fields: [guildId], references: [id])
+  guildId       String
+  roleOverUsers RoleOverUser[]
 }
 
 model MessageGif {

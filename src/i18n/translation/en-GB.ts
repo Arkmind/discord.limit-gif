@@ -16,8 +16,15 @@ export default {
       duration: {
         SUCCESS:
           'Successfully set the global duration to %duration% second%plural% 🚀',
+        SUCCESS_ROLE:
+          'Successfully set the duration of %role% to %duration% second%plural% 🚀 *(to reset it set duration to -1)*',
+        SUCCESS_RESET: 'Successfully reset the duration of %role% 👩‍🚀',
         ERROR:
           "A strange error occured, sorry for the inconvenience, we'll soon launch an expedition to fix this 👨‍🚀🚀",
+        ERROR_INVALID_TIME:
+          "Duration must be more than 0, sorry i can't go back in time 🤖",
+        ERROR_ROLE:
+          "Did you tried to add a specific user ? Sorry but i'm not handling this at the moment 😶",
       },
       addall: {
         ERROR:

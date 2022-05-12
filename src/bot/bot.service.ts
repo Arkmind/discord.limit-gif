@@ -1,6 +1,7 @@
+import { InjectDiscordClient } from '@discord-nestjs/core';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { Message, NonThreadGuildBasedChannel } from 'discord.js';
+import { Client, Message, NonThreadGuildBasedChannel } from 'discord.js';
 import { JSDOM } from 'jsdom';
 import { lastValueFrom } from 'rxjs';
 import { PrismaService } from 'src/prisma.service';
@@ -8,6 +9,8 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class BotService {
   constructor(
+    @InjectDiscordClient()
+    private readonly client: Client,
     private readonly prismaService: PrismaService,
     private readonly httpService: HttpService,
   ) {}
@@ -42,6 +45,23 @@ export class BotService {
   }
 
   async getDuration(message: Message) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: message.author.id },
+      include: {
+        roleOverUsers: {
+          where: { NOT: { role: { duration: null } } },
+          select: { id: true, role: { select: { duration: true } } },
+        },
+      },
+    });
+
+    console.log(user);
+
+    if (user.roleOverUsers.length > 0)
+      return user.roleOverUsers.sort(
+        (a, b) => a.role.duration - b.role.duration,
+      )[0].role.duration;
+
     const followChannel = await this.prismaService.followChannel.findUnique({
       where: { channelId: message.channelId },
     });

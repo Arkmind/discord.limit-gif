@@ -33,7 +33,9 @@ export class ChannelListSubCommand
     const itemsPerPage = 10;
     const page = dto?.page || 1;
 
-    const count = await this.prismaService.followChannel.count();
+    const count = await this.prismaService.followChannel.count({
+      where: { channel: { guildId: interaction.guildId } },
+    });
 
     const followedChannels = await this.prismaService.followChannel.findMany({
       where: {
@@ -48,7 +50,7 @@ export class ChannelListSubCommand
         },
       },
       take: itemsPerPage,
-      skip: itemsPerPage * page - 1,
+      skip: itemsPerPage * (page - 1),
     });
 
     const fields = followedChannels.map(({ channel, user, duration }) => ({
@@ -59,13 +61,13 @@ export class ChannelListSubCommand
       inline: false,
     }));
 
-    if (page > Math.floor(count / itemsPerPage)) {
+    if (page > Math.ceil(count / itemsPerPage)) {
       return this.i18n.t('en-GB', 'bot.channel.list.NO_MORE_PAGES');
     }
 
     const embed = new MessageEmbed()
       .setTitle('Channel list')
-      .setDescription(`Page : ${page}/${Math.floor(count / itemsPerPage)}`)
+      .setDescription(`Page : ${page}/${Math.ceil(count / itemsPerPage)}`)
       .setColor('PURPLE')
       .addFields(...fields);
 
