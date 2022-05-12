@@ -3,8 +3,6 @@ import { Once, InjectDiscordClient, On } from '@discord-nestjs/core';
 import { Client, Message } from 'discord.js';
 import { PrismaService } from 'src/prisma.service';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
-import { JSDOM } from 'jsdom';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { FollowChannel, MessageGif } from '@prisma/client';
 import { BotService } from './bot.service';
@@ -139,5 +137,7 @@ export class BotGateway {
         id: message.channelId,
       },
     });
+
+    console.log(channel);
   }
 }
