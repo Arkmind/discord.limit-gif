@@ -74,28 +74,32 @@ export class BotService {
   }
 
   async isContentTypeOfOGAGif(url: string) {
-    const response = await lastValueFrom(
-      this.httpService.get(url, {
-        headers: {
-          Accept: 'text/html',
-          'Content-Type': 'text/html',
-        },
-      }),
-    );
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get(url, {
+          headers: {
+            Accept: 'text/html',
+            'Content-Type': 'text/html',
+          },
+        }),
+      );
 
-    const { window } = new JSDOM(response.data);
+      const { window } = new JSDOM(response.data);
 
-    const metas = window.document.querySelectorAll('meta[property]');
+      const metas = window.document.querySelectorAll('meta[property]');
 
-    const preview = Array.from(metas).filter(
-      (meta: HTMLMetaElement) => meta.getAttribute('property') === 'og:image',
-    );
+      const preview = Array.from(metas).filter(
+        (meta: HTMLMetaElement) => meta.getAttribute('property') === 'og:image',
+      );
 
-    return !!preview.find((meta) =>
-      /(http(s?):)([/|.|\w|\s|-])*\.(?:webp|gif)/.test(
-        meta.getAttribute('content'),
-      ),
-    );
+      return !!preview.find((meta) =>
+        /(http(s?):)([/|.|\w|\s|-])*\.(?:webp|gif)/.test(
+          meta.getAttribute('content'),
+        ),
+      );
+    } catch (error) {
+      return false;
+    }
   }
 
   async isMessageAGif(message: Message) {
