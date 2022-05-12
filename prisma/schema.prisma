@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Guild {
+  id       String    @unique
+  name     String
+  duration Int
+  Channel  Channel[]
+}
+
+model Channel {
+  id            String         @unique
+  guildId       String
+  guild         Guild?         @relation(fields: [guildId], references: [id])
+  createdAt     DateTime
+  deleted       Boolean
+  mentionable   String
+  name          String
+  type          String
+  followChannel FollowChannel?
+}
+
+model FollowChannel {
+  id         String       @unique @default(cuid())
+  channel    Channel      @relation(fields: [channelId], references: [id])
+  channelId  String       @unique
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String
+  duration   Int?
+  MessageGif MessageGif[]
+}
+
+model User {
+  id            String  @unique
+  avatar        String?
+  username      String?
+  discriminator String?
+  mentionable   String?
+
+  followChannels FollowChannel[]
+  MessageGif     MessageGif[]
+}
+
+model MessageGif {
+  id        String   @unique
+  createdAt DateTime @default(now())
+  message   String
+
+  followChannel          FollowChannel @relation(fields: [followChannelChannelId], references: [channelId])
+  followChannelChannelId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
