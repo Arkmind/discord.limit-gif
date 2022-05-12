@@ -10,6 +10,11 @@ $ git clone git@github.com:Arkmind/discord.limit-gif.git
 $ yarn
 $ npx prisma migrate dev
 ```
+Edit your `.env` and add the following lines
+```env
+BOT_TOKEN="YOUR-BOT-TOKEN" //ex: "IVLtAPUSWs0WazE7NFS7aYwu.CgJtHR.TULQkrSGMhvSXZJDbYe5rci8aYJ" (nope this is not a real one no need to try)
+DATABASE_URL="path-of-your-db" //ex: "file:./dev.db"
+```
 
 ## Running the app
 ```bash
