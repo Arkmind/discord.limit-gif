@@ -103,8 +103,6 @@ export class ChannelAddSubCommand
       },
     });
 
-    console.log(followChannel);
-
     this.eventEmitter.emit('bot.channel.add', followChannel);
 
     return this.i18n.t(

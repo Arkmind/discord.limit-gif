@@ -55,8 +55,6 @@ export class BotService {
       },
     });
 
-    console.log(user);
-
     if (user.roleOverUsers.length > 0)
       return user.roleOverUsers.sort(
         (a, b) => a.role.duration - b.role.duration,

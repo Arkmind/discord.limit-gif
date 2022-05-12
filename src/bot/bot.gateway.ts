@@ -168,13 +168,9 @@ export class BotGateway {
       },
     });
 
-    console.log(lastSent);
-
     if (!lastSent) return true;
 
     const duration = await this.botService.getDuration(message);
-
-    console.log(duration);
 
     return (
       lastSent.createdAt.getTime() + duration * 1000 < new Date().getTime()
