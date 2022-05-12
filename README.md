@@ -29,23 +29,17 @@ $ yarn start:prod
 ```
 
 ## Commands
-#### `/channel list`
-> Will list all watched channels
+- `/channel list` > Will list all watched channels
 
-#### `/channel add channel:Channel *duration:number`
-> Will add a channel to the watchlist and set a specific duration in between gif sent
+- `/channel add channel:Channel *duration:number` > Will add a channel to the watchlist and set a specific duration in between gif sent
 
-#### `/channel duration duration:number *role:Mentionnable`
-> Will set the global duration or specific rank duration in between gif sent
+- `/channel duration duration:number *role:Mentionnable` > Will set the global duration or specific rank duration in between gif sent
 
-#### `/channel addall`
-> Will add all accessible channels to the watchlist
+- `/channel addall` > Will add all accessible channels to the watchlist
 
-#### `/channel remove channel:Channel`
-> Will remove a channel from the watchlist
+- `/channel remove channel:Channel` > Will remove a channel from the watchlist
 
-#### `/channel help`
-> Will show a help that explains all commands 
+- `/channel help` > Will show a help that explains all commands 
 
 
 ## Credits
